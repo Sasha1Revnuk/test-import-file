@@ -1,0 +1,70 @@
+networks:
+  test_import_file:
+
+services:
+
+  #PHP Service
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/services/php/Dockerfile
+      args:
+        WWWUSERID: '${DOCKER_SERVICES_PHP_WWWUSERID:-1000}'
+    container_name: ${DOCKER_SERVICES_NAME:-test_import_file}_php
+    restart: unless-stopped
+    tty: true
+    user: "1000:1000"
+    environment:
+      DOCKER_SERVICES_NAME: app
+      SERVICE_TAGS: dev
+      PHP_IDE_CONFIG: "serverName=${DOCKER_SERVICES_NAME:-test_import_file}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/services/php/local-php.ini:/usr/local/etc/php/conf.d/local-php.ini
+    networks:
+      - test_import_file
+    depends_on:
+      - db
+
+
+  #Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: ${DOCKER_SERVICES_NAME:-test_import_file}_nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${DOCKER_SERVICES_URL_PORT:-5000}:80"
+      - "${DOCKER_SERVICES_HTTPS_PORT:-8143}:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/services/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/services/nginx/cert/:/etc/nginx/cert/
+    networks:
+      - test_import_file
+    depends_on:
+      - php
+
+
+  #MySQL Service
+  db:
+    container_name: ${DOCKER_SERVICES_NAME:-test_import_file}_db
+    image: mysql/mysql-server:8.0.23
+    restart: unless-stopped
+    ports:
+      - "${DOCKER_SERVICES_DB_PORT:-33036}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      SERVICE_TAGS: dev
+      DOCKER_SERVICES_NAME: mysql
+    volumes:
+      - ./docker/services/mysql/data:/var/lib/mysql/
+      - ./docker/services/mysql/conf/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - test_import_file

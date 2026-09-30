@@ -1,0 +1,59 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    paths:
+        - app/
+        - database/factories/
+        - database/seeders/
+        - routes/
+        - tests/
+
+    excludePaths:
+        - bootstrap/
+        - storage/
+        - vendor/
+        - node_modules/
+        - public/
+        - lang/
+        - resources/views/
+
+    # Maximum settings for level 8
+    checkUninitializedProperties: true
+    checkDynamicProperties: true
+    reportUnmatchedIgnoredErrors: false
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkBenevolentUnionTypes: true
+    checkExplicitMixed: true
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+
+    # Laravel-specific ignored errors
+    ignoreErrors:
+        - '#Unsafe usage of new static#'
+        - '#Property .* does not accept default value of type null#'
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder#'
+        - '#Method .* should return .* but returns Illuminate\\Database\\Eloquent\\Model#'
+        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model#'
+        - '#Cannot call method .* on mixed#'
+        - '#Method .* has parameter .* with no value type specified in iterable type array#'
+        - '#Method .* return type has no value type specified in iterable type array#'
+        - '#Property .* type has no value type specified in iterable type array#'
+        - '#Binary operation .* between .* and .* results in an error#'
+        - '#Call to an undefined method Illuminate\\Http\\Request#'
+        - '#Call to an undefined method Illuminate\\Support\\Collection#'
+        - '#Parameter .* of method .* expects .*, .* given#'
+        - '#Method App\\Models\\.* invoked with .* parameters, .* required#'
+        - '#Trying to invoke .* but it might not be a callable#'
+        - '#Call to function is_.* with .* will always evaluate to false#'
+        - '#Short ternary operator is not allowed. Use null coalescing operator if applicable or consider using long ternary#'
+        - '#^Cannot cast mixed to (string|int)\.$#'
+        - '#Parameter \#\d+ \$\w+ of .* expects .+, mixed given\.#'
+
+    # Laravel global functions
+    universalObjectCratesClasses:
+        - Illuminate\Database\Eloquent\Factories\Factory
+        - Illuminate\Database\Eloquent\Model
+        - Illuminate\Http\Resources\Json\JsonResource
