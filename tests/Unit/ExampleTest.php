@@ -10,6 +10,6 @@ class ExampleTest extends TestCase
     #[Test]
     public function that_true_is_true(): void
     {
-        $this->assertTrue(true);
+        $this->assertSame(1, 1);
     }
 }

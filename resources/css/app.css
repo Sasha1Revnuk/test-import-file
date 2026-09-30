@@ -16,3 +16,27 @@
 }
 
 @variant dark (&:where(.dark, .dark *));
+
+.fi-lead-import-modal {
+    @apply !max-h-[min(90dvh,52rem)] !overflow-hidden;
+}
+
+.fi-lead-import-modal .fi-modal-content {
+    @apply !overflow-hidden;
+}
+
+.fi-lead-import-mapping {
+    @apply max-h-72 overflow-y-auto pe-1;
+}
+
+.fi-lead-import-mapping-row {
+    @apply items-center;
+}
+
+.fi-lead-import-toggle {
+    @apply flex h-full items-center justify-center;
+}
+
+.fi-lead-import-field-label {
+    @apply flex h-full items-center text-sm text-gray-950;
+}

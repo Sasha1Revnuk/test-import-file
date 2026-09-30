@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\Import\Contracts\ImportServiceInterface;
+use App\Services\Import\ImportService;
+use App\Services\Lead\Contracts\LeadServiceInterface;
+use App\Services\Lead\LeadService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
@@ -16,7 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ImportServiceInterface::class, ImportService::class);
+        $this->app->bind(LeadServiceInterface::class, LeadService::class);
     }
 
     /**

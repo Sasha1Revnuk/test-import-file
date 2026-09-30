@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Lead extends Model
+class ImportRow extends Model
 {
-    /** @use HasFactory<\Database\Factories\LeadFactory> */
-    use HasFactory;
-
     public $timestamps = false;
 
     /**
      * @var list<string>
      */
     protected $fillable = [
+        'import_id',
+        'row_number',
         'external_id',
         'created_at',
         'first_name',
@@ -31,6 +30,8 @@ class Lead extends Model
         'manager',
         'comment',
         'next_contact_at',
+        'raw_values',
+        'errors',
     ];
 
     /**
@@ -39,9 +40,17 @@ class Lead extends Model
     protected function casts(): array
     {
         return [
-            'created_at' => 'datetime',
-            'budget_uah' => 'integer',
-            'next_contact_at' => 'datetime',
+            'row_number' => 'integer',
+            'raw_values' => 'array',
+            'errors' => 'array',
         ];
+    }
+
+    /**
+     * @return BelongsTo<Import, $this>
+     */
+    public function import(): BelongsTo
+    {
+        return $this->belongsTo(Import::class);
     }
 }
